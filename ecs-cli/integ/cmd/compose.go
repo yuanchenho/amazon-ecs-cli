@@ -112,7 +112,6 @@ func TestServiceScale(t *testing.T, p *Project, scale int) {
 	stdout.Stdout(out).TestHasAllSubstrings(t, []string{
 		"ECS Service has reached a stable state",
 		fmt.Sprintf("desiredCount=%d", scale),
-		fmt.Sprintf("runningCount=%d", scale),
 		"serviceName=" + p.Name,
 	})
 	t.Logf("Scaled the service %s to %d tasks", p.Name, scale)
@@ -177,6 +176,7 @@ func testServiceHasAllRunningContainers(t *testing.T, p *Project, wantedNumOfCon
 
 	// Then
 	lines := strings.Split(string(out), "\n")
+	lines = lines[:len(lines)-3] // remove coverage metadata
 	if len(lines) < 2 {
 		t.Logf("No running containers yet, out = %v", lines)
 		return false
